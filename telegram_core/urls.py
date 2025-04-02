@@ -11,6 +11,11 @@ urlpatterns = [
         name='update'
     ),
     re_path(
+        r'^webapp/$',
+        views.TelegramWebappView.as_view(),
+        name='webapp'
+    ),
+    re_path(
         r'^set_webhook/$',
         views.ManualSetWebhookView.as_view()
     )

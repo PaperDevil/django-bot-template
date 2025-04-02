@@ -1,0 +1,43 @@
+{% load static i18n %}
+{% load vite %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Webapp 1234{% endblock %}</title>
+
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'base/base.css' %}">
+    {% endblock %}
+
+    {% block base_js %}
+        <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+    {% endblock %}
+    {% block js %}{% endblock %}
+</head>
+<body>
+    {% if messages %}
+        <ul class="message-global">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div id="react-root"
+    ></div>
+
+    {% block body_js %}
+        <script type="module" src="{% static 'react/index.min.js' %}"></script>
+        {% if vite_enabled %}
+            {% vite_hmr %}
+            <script
+            type="module"
+            src="http://localhost:5173/src/index.tsx"
+            ></script>
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

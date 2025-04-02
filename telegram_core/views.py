@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.http import Http404
 from django.http.response import JsonResponse
 from django.utils.decorators import method_decorator
+from django.conf import settings
 from telebot.types import Update
 
 from telegram_core.telegram import TgProvider
@@ -13,9 +14,7 @@ from telegram_core.telegram import TgProvider
 
 @method_decorator(csrf_exempt, name='dispatch')
 class TelegramUpdateView(View):
-    """
-
-    """
+    """"""
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
@@ -24,13 +23,28 @@ class TelegramUpdateView(View):
         return JsonResponse({}, status=200)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class TelegramWebappView(TemplateView):
+    http_method_names = ['get']
+    template_name = 'webapp.html'
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+
 class ManualSetWebhookView(TemplateView):
     """"""
     http_method_names = ['get']
-    template_name = ''
+    template_name = 'webhook.html'
 
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.is_authenticated:
             raise Http404
 
-    def get_context_data(self, **kwargs):...
+    def get_context_data(self, **kwargs):
+        context = {}
+        context.update({
+            'token': settings.TELEGRAM_BOT_TOKEN,
+            'base_url': settings.BASE_URL
+        })
+        return context

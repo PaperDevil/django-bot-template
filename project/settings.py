@@ -33,7 +33,7 @@ if not SECRET_KEY:
     print()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config.get('server', 'DEBUG', fallback=True)
+DEBUG = config.getboolean('server', 'DEBUG', fallback=True)
 ALLOWED_HOSTS = [
     '*'
 ]
@@ -41,6 +41,9 @@ ALLOWED_HOSTS = [
 USE_NGROK = config.getboolean('server', 'USE_NGROK', fallback=False)
 BASE_URL = config.get('server', 'BASE_URL', fallback='http://0.0.0.0:8000')
 
+INTERNAL_IPS = ['0/8', '10/8']
+if DEBUG:
+    INTERNAL_IPS.append('127.0.0.1')
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
@@ -80,10 +83,15 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'telegram_core.context_processors.vite_enabled'
             ],
+            'builtins': [
+                'telegram_core.templatetags.vite'
+            ]
         },
     },
 ]
