@@ -1,6 +1,7 @@
 asgiref==3.8.1
 Django==5.2
 sqlparse==0.5.3
+loguru==0.7.3
 pyTelegramBotAPI==4.26.0
 httpx==0.28.1
 pyngrok==7.2.3

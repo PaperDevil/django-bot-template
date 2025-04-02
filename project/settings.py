@@ -10,23 +10,45 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+import sys
 from pathlib import Path
+from configparser import ConfigParser
+
+from django.core.exceptions import ImproperlyConfigured
+from loguru import logger
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+config = ConfigParser()
+config.read(os.path.join(BASE_DIR, 'config.conf'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)fs$0hn)=2tch-21mei!l5c#%x4#7h1@kna!!fj2u&ate%aqtp'
+SECRET_KEY = config.get('server', 'SECRET_KEY')
+if not SECRET_KEY:
+    print()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.get('server', 'DEBUG', fallback=True)
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1'
+]
 
-ALLOWED_HOSTS = []
+USE_NGROK = config.getboolean('server', 'USE_NGROK', fallback=False)
+BASE_URL = config.get('server', 'BASE_URL', fallback='http://0.0.0.0:8000')
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',
+    BASE_URL
+]
+CSRF_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
+CORS_ORIGINS_WHITELIST = CSRF_TRUSTED_ORIGINS
 
 # Application definition
 
@@ -37,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'telegram_core'
 ]
 
 MIDDLEWARE = [
@@ -75,10 +98,13 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / config.get('database', 'DB_NAME'),
     }
 }
 
+
+# Logging settings
+logger.add(sys.stdout, format="{time} - {level} - {message}", filter="sub.module")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -103,11 +129,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -120,3 +143,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Telegram Bot API settings
+
+TELEGRAM_BOT_TOKEN = config.get('telegram', 'TOKEN', fallback=None)
+TELEGRAM_BOT_NAME = config.get('telegram', 'BOT_NAME')
+if not TELEGRAM_BOT_TOKEN or not TELEGRAM_BOT_NAME:
+    raise ImproperlyConfigured("Bot info not filled in config.conf")
