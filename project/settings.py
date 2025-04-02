@@ -47,6 +47,7 @@ if DEBUG:
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
+    'https://*.ketovx.ru',
     BASE_URL
 ]
 CSRF_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
