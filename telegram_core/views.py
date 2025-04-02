@@ -40,6 +40,8 @@ class ManualSetWebhookView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.is_authenticated:
             raise Http404
+        
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = {}
