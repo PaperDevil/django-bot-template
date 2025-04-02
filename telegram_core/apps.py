@@ -35,7 +35,7 @@ class TelegramCoreConfig(AppConfig):
     @staticmethod
     def init_webhooks(url):
         # Setup telegram webhooks
-        tg_webhook = url + reverse('core:tg_update')
+        tg_webhook = url + reverse('telegram_core:update')
         print('Telegram webhook url set -> {}'.format(tg_webhook))
 
         httpx.post(

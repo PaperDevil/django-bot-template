@@ -35,8 +35,7 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.get('server', 'DEBUG', fallback=True)
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1'
+    '*'
 ]
 
 USE_NGROK = config.getboolean('server', 'USE_NGROK', fallback=False)

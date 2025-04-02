@@ -8,6 +8,7 @@ urlpatterns = [
     re_path(
         r'^update/$',
         views.TelegramUpdateView.as_view(),
+        name='update'
     ),
     re_path(
         r'^set_webhook/$',
