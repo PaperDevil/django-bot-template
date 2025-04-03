@@ -22,7 +22,7 @@ COPY --from=builder /opt/venv /opt/venv
 
 WORKDIR /
 COPY . .
-RUN mkdir /dbs
+RUN mkdir -p /dbs
 
 ENV PATH "/opt/venv/bin:$PATH"
 ENV PYTHONPATH "/opt/venv/bin:$PYTHONPATH"
