@@ -3,7 +3,7 @@ services:
     build: .
     command: gunicorn project.wsgi:application --workers 3
     ports:
-      - 6261:8000
+      - "6261:8000"
     volumes:
       - db-data:/dbs
     environment:
