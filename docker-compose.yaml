@@ -3,7 +3,7 @@ services:
     build: .
     command: sh startup.sh
     ports:
-      - 39393:8000
+      - 6261:8000
     volumes:
       - db-data:/dbs
     environment:
