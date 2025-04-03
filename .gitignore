@@ -72,6 +72,7 @@ node_modules/
 *.map
 
 media/
+dbs/
 db.sqlite3
 
 .DS_Store/

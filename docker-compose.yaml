@@ -1,0 +1,17 @@
+services:
+  splitfamily:
+    build: .
+    command: sh startup.sh
+    ports:
+      - 39393:8000
+    volumes:
+      - db-data:/dbs
+    environment:
+      - CONFIG_NAME=config.conf
+
+networks:
+  base:
+
+
+volumes:
+  db-data:

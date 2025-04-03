@@ -18,5 +18,9 @@ urlpatterns = [
     re_path(
         r'^set_webhook/$',
         views.ManualSetWebhookView.as_view()
+    ),
+    re_path(
+        r'^get_webhook/$',
+        views.CheckWebhook.as_view()
     )
 ]

@@ -13,6 +13,7 @@ class TelegramCoreConfig(AppConfig):
 
     def ready(self):
         if not settings.DEBUG or sys.argv[1] != 'runserver':
+            TelegramCoreConfig.init_webhooks(settings.BASE_URL)
             return
 
         if settings.USE_NGROK:

@@ -4,7 +4,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.http import Http404
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.conf import settings
 from telebot.types import Update
@@ -50,3 +50,20 @@ class ManualSetWebhookView(TemplateView):
             'base_url': settings.BASE_URL
         })
         return context
+
+
+class CheckWebhook(View):
+    http_method_names = ['get']
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            raise Http404
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect(
+            'https://api.telegram.org/bot{token}/getWebhookInfo'.format(
+                token=settings.TELEGRAM_BOT_TOKEN
+            )
+        )
